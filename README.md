@@ -1,0 +1,2 @@
+
+	nasneの情報を取得してTwitterに投稿するpythonスクリプトです．
