@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import urllib2
 import json
+import re
 import time
 import twitter
 import twitterKeys
+import urllib2
 
 api = twitter.Api(twitterKeys.keys['consumerKey'],
 	  			  twitterKeys.keys['consumerSecret'],
@@ -13,6 +14,7 @@ api = twitter.Api(twitterKeys.keys['consumerKey'],
 				 )
 
 nasne_ip = "192.168.10.30"
+searchPattern = r"nasne"
 
 def getNasneStatus(nasne_ip):
 	try:
@@ -66,9 +68,8 @@ if __name__ == '__main__':
 			for tweet in myTimeline:
 				if tweetNum == 0 :
 					since = tweet.id
-				print tweet.text
 				
-				if 'nasne' in tweet.text:
+				if re.search(searchPattern, tweet.text):
 					ns = getNasneStatus(nasne_ip)
 					
 					tweetHdd = "@stash_4\nHDD_Status\nHDD usage: " + str(ns['hddUsage']) + "%\nFree space: " + str(ns['hddFree']) + "GB"
