@@ -72,16 +72,16 @@ if __name__ == '__main__':
 				if re.search(searchPattern, tweet.text):
 					ns = getNasneStatus(nasne_ip)
 					
-					tweetHdd = "@stash_4\nHDD_Status\nHDD usage: " + str(ns['hddUsage']) + "%\nFree space: " + str(ns['hddFree']) + "GB"
-					api.PostUpdate(tweetHdd.decode('utf-8'), in_reply_to_status_id=tweet.id)
+					tweetHdd = u"@stash_4\nHDD_Status\nHDD usage: " + unicode(ns['hddUsage']) + u"%\nFree space: " + unicode(ns['hddFree']) + u"GB"
+					api.PostUpdate(tweetHdd, in_reply_to_status_id=tweet.id)
 					
-					tweetRec = "@stash_4\nRecording_Status\n"
+					tweetRec = u"@stash_4\nRecording_Status\n"
 					if ns['channel'] == "":
-						tweetRec = tweetRec + "The program isn't being recorded."
+						tweetRec = tweetRec + u"The program isn't being recorded."
 					else:
-						tweetRec = tweetRec + "The following program is being recorded.\nChannel: " + ns['channel'] + "\nTitle:" + ns['title'] + "\nDescription" + ns['description']
+						tweetRec = tweetRec + u"The following program is being recorded.\nChannel: " + unicode(ns['channel']) + u"\nTitle:" + unicode(ns['title']) + u"\nDescription" + unicode(ns['description'])
 					time.sleep(5)
-					api.PostUpdate(tweetRec.decode('utf-8'), in_reply_to_status_id=tweet.id)
+					api.PostUpdate(tweetRec, in_reply_to_status_id=tweet.id)
 				
 				tweetNum += 1
 		
