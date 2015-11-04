@@ -29,19 +29,21 @@ def getNasneStatus(nasne_ip):
 		hddUsage_Per = round((float(j_hddInfo['HDD']['usedVolumeSize']) / float(j_hddInfo['HDD']['totalVolumeSize'])) * 100, 2)
 		hddFree_GB = round((float(j_hddInfo['HDD']['freeVolumeSize']) / 1024 / 1024 / 1024), 2)
 		
+		# 録画中かどうかの判定
 		if j_chInfo['tvTimerInfoStatus']['nowId'] == "":
 			recChannel = ""
 			recTitle = ""
 			recDescription = ""
 		else:
 			recInfo = urllib2.urlopen(apiAddr +
-									  "channelInfoGet2?networkId="+ j_chInfo['tuningStatus']['networkId'] + 
-									  "&transportStreamId=" + j_chInfo['tuningStatus']['transportStreamId'] +
-									  "&serviceId=" + j_chInfo['tuningStatus']['serviceId'] +
+									  "channelInfoGet2?networkId="+ str(j_chInfo['tuningStatus']['networkId']) + 
+									  "&transportStreamId=" + str(j_chInfo['tuningStatus']['transportStreamId']) +
+									  "&serviceId=" + str(j_chInfo['tuningStatus']['serviceId']) +
 									  "&withDescriptionLong=0"
 									 )
+			
 			j_recInfo = json.loads(recInfo.read())
-			recChannel = j_recInfo['channel']['tsName']
+			recChannel = j_recInfo['channel']['service']['serviceName']
 			recTitle = j_recInfo['channel']['title']
 			recDescription = j_recInfo['channel']['description']
 			
@@ -54,6 +56,7 @@ def getNasneStatus(nasne_ip):
 		return nasneStatus
 	
 	except:
+		print e
 		time.sleep(10)
 
 
@@ -79,7 +82,9 @@ if __name__ == '__main__':
 					if ns['channel'] == "":
 						tweetRec = tweetRec + u"The program isn't being recorded."
 					else:
-						tweetRec = tweetRec + u"The following program is being recorded.\nChannel: " + unicode(ns['channel']) + u"\nTitle:" + unicode(ns['title']) + u"\nDescription" + unicode(ns['description'])
+						tweetRec = tweetRec + u"Channel: " + unicode(ns['channel']) + u"\nTitle:" + unicode(ns['title']) + u"\nDescription: " + unicode(ns['description'])
+						if len(tweetRec)>135:
+							tweetRec = tweetRec[:135] + u"…"
 					time.sleep(5)
 					api.PostUpdate(tweetRec, in_reply_to_status_id=tweet.id)
 				
